@@ -1,0 +1,72 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: Train Model",
+        "type": "python",
+        "request": "launch",
+        "program": "./src/train.py",  // 替换为你的训练脚本路径
+        "console": "integratedTerminal",           // 控制台显示选项
+        "args": [
+            "--num_gpus", "1",                       // 使用 1 个 GPU
+            "--mode", "sig",                         // 训练模式设置为 [sig|ins|finetune] 
+            "--dataset_type", "imagefolder",             // 数据集类型为 [cifar10|imagefolder|filedataset]
+            "--data_dir", "./src/dataset/",               // 数据集路径
+            "--save_dir", "./src/model/text/",                 // 模型保存路径
+            "--config", "./src/config/X-ray_config.py",  // 配置文件路径
+            "--valid_num", "500",                   // 验证集样本数量
+            "--dropout", "0.5",                      // Dropout 概率
+            //"--lr", "0.001",                         // 学习率
+            "--batch_size", "8",                    // 每个 GPU 的批次大小
+            //"--num_iters", "10000",                  // 迭代次数
+            //"--log_interval", "100",                 // 日志记录的间隔
+            //"--valid_interval", "1000",              // 验证的间隔
+            //"--decay_rate", "0.1",                   // 学习率衰减率
+            //"--decay_interval", "5000"               // 学习率衰减间隔
+          ],
+      },
+      {
+        "name": "Python: Test Model",
+        "type": "python",
+        "request": "launch",
+        "program": "./src/test.py",
+        "console": "integratedTerminal",
+        "args": [
+          "--dataset", "cifar10",                 // 指定数据集类型，可以是 cifar10、imagenet32、imagenet64 或 imagenet64_small
+          "--dataset_type", "filedataset",            // 数据集格式，支持 cifar10、imagefolder 或 filedataset
+          "--data_dir", "./src/dataset",              // 数据集文件夹路径
+          "--model", "./src/model",                   // 模型文件夹路径
+          "--mode", "inference",                  // 运行模式，可选值为 inference、single、dataset 或 speed
+          "--batchsize", "64",                    // 推理时的批处理大小，或数据集压缩模式下的数据集大小
+          "--log_path", "./src/logs/test_log.txt"     // 数据集或单一压缩模式下的日志文件路径
+        ],
+      },
+      {
+        "name": "Python: Compress Script--encoder",
+        "type": "python",
+        "request": "launch",
+        "program": "./src/compress.py",
+        "args": [
+            "--encode",
+            "--input", "./src/image/1.jpg",
+            "--output", "./src/image/1.bin",
+            "--config", "./src/config/X-ray_config.py",
+            "--model", "./src/model/imagenet64_small/"
+        ],
+      },
+      {
+        "name": "Python: Compress Script--encoder",
+        "type": "python",
+        "request": "launch",
+        "program": "./src/compress.py",
+        "args": [
+            "--decode",
+            "--input", "./src/image/1.jpg",
+            "--output", "./src/image/1.bin",
+            "--config", "./src/config/X-ray_config.py",
+            "--model", "./src/model/imagenet64_small/"
+        ],
+      }
+    ]
+  }
+  
